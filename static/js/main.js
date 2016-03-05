@@ -47,8 +47,10 @@ var clean = function(dataset){
 };
 
 var generatePair = function(){
-    document.getElementById('pairs').innerHTML = '<div id="pair1"> <div class="panel panel-default"> <div class="panel-heading">Pairs Instance</div> <div class="panel-body"> <table class="table"> <tr> <th>Symbol</th> <th>Price</th> <th>Volume</th> <th>MarketCap</th> </tr> <tr> <td id="stock1ticker"></td> <td id="stock1Price"></td> <td id="stock1Vol"></td> <td id="stock1Cap"></td> </tr> <tr> <td id="stock2ticker"></td> <td id="stock2Price"></td> <td id="stock2Vol"></td> <td id="stock2Cap"></td> </tr> <tr> <td id="spread"></td> <td id="DiffPrice"></td> <td id="DiffVol"></td> <td id="DiffCap"></td> </tr> </table> </div> <div id="chart"></div> </div> </div>';
+    document.getElementById('pairs').innerHTML = '<div id="pair"> <div class="panel panel-default"> <div class="panel-heading">Pairs Instance</div> <div class="panel-body"> <table class="table"> <tr> <th>Symbol</th> <th>Price</th> <th>Volume</th> <th>MarketCap</th> </tr> <tr> <td id="stock1ticker"></td> <td id="stock1Price"></td> <td id="stock1Vol"></td> <td id="stock1Cap"></td> </tr> <tr> <td id="stock2ticker"></td> <td id="stock2Price"></td> <td id="stock2Vol"></td> <td id="stock2Cap"></td> </tr> <tr> <td id="spread"></td> <td id="DiffPrice"></td> <td id="DiffVol"></td> <td id="DiffCap"></td> </tr> </table> </div> <div id="chart"></div> </div> </div>';
 };
+
+var ID = 0;
 
 $(document).ready(function(){
 
@@ -66,13 +68,18 @@ $(document).ready(function(){
 
             //callback
             if(datasets.length == 2) {
+                console.log($("#stock1").val(), datasets[1]["quote"][0]["Symbol"]);
+                console.log($("#stock2").val(), datasets[0]["quote"][0]["Symbol"]);
+
                 if ( $("#stock1").val() == datasets[1]["quote"][0]["Symbol"] || $("#stock2").val() == datasets[0]["quote"][0]["Symbol"] ){
-                    var tmp = datasets[0];
+                    console.log("inside");
+                    var tmp = datasets[1];
                     datasets[1] = datasets[0];
                     datasets[0] = tmp;
+                    console.log(datasets);
                 }
                 console.log("display data");
-                generatePair();
+                generatePair(ID);
                 var data1 = datasets[0]["quote"];
                 var data2 = datasets[1]["quote"];
 
@@ -113,11 +120,11 @@ $(document).ready(function(){
                         console.log(ratio, given_ratio);
 
                         if (ratio <= given_ratio){
-                            console.log("less than historic");
+                            //console.log("less than historic");
                             $("#DiffRatio").addClass("green");
                         }
                         else{
-                            console.log("greater than historic");
+                            //console.log("greater than historic");
                             $("#DiffRatio").removeClass("green");
                         }
                         //Generates the chart each time
