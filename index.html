@@ -5,6 +5,11 @@
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css"></head>
+    <style>
+        .green{
+            background-color: aquamarine;
+        }
+    </style>
 <body>
     <div class="container">
         <div class="panel panel-default">
@@ -12,15 +17,54 @@
                 <h3 class="panel-title">Pairs Tracker</h3>
             </div>
             <div class="panel-body">
-                <form id="stockForm"  >
-                    <input type="text" id="stock1" placeholder="Enter stock"  />
-                    <input type="text" id="stock2" placeholder="Enter stock"  />
-                    <input type="text" id="min" placeholder="Enter min spread"  />
-                    <input type="text" id="max" placeholder="Enter max spread" />
-                    <input type="submit" class="btn btn-default" value="Add" />
+                <form id="stockForm" class="form-inline" >
+                    <div class="form-group">
+                        <label for="stock1">Enter stock</label>
+                        <input type="text" id="stock1" class="form-control" >
+                    </div>
+                    <div class="form-group">
+                        <label for="stock2">Enter stock</label>
+                        <input type="text" id="stock2" class="form-control"  />
+                    </div>
+                    <div class="form-group">
+                        <label for="ratio">Enter ratio</label>
+                        <input type="text" id="ratio" />
+                    </div>
+                    <button type="submit" class="btn btn-default">Add</button>
                 </form>
             </div>
         </div>
+        <div class="panel-body">
+            <table class="table">
+                <tr>
+                    <th>Symbol</th>
+                    <th>Price</th>
+                    <th>Volume</th>
+                    <th>MarketCap</th>
+                    <th>Ratio</th>
+                </tr>
+                <tr>
+                    <td id="stock1ticker"></td>
+                    <td id="stock1Price"></td>
+                    <td id="stock1Vol"></td>
+                    <td id="stock1Cap"></td>
+                </tr>
+                <tr>
+                    <td id="stock2ticker"></td>
+                    <td id="stock2Price"></td>
+                    <td id="stock2Vol"></td>
+                    <td id="stock2Cap"></td>
+                </tr>
+                <tr>
+                    <td id="spread"></td>
+                    <td id="DiffPrice"></td>
+                    <td id="DiffVol"></td>
+                    <td id="DiffCap"></td>
+                    <td id="DiffRatio"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="chart"></div>
         <div id="pairs">
         </div>
     </div>
