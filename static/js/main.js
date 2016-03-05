@@ -60,6 +60,8 @@ var ID = 0;
 $(document).ready(function(){
 
     $( "#stockForm" ).submit(function( event ) {
+        $("#one").removeClass("none");
+        $("#one").addClass("show");
         var datasets = [];
         var vdatasets = [];
         event.preventDefault();
@@ -104,33 +106,38 @@ $(document).ready(function(){
                 function myLoop(){
                     setTimeout(function(){
                         var price1 = parseFloat(data1[i]["Close"]);
-                        var price2 = parseFloat(data2[i]["Close"])
-                        var mktcap1 = price1*parseFloat(data1[i]["Volume"]);
-                        var mktcap2 = price2*parseFloat(data2[i]["Volume"]);
+                        var price2 = parseFloat(data2[i]["Close"]);
+                        var vol1 = parseFloat(data1[i]["Volume"]);
+                        var vol2 = parseFloat(data2[i]["Volume"]);
+                        var mktcap1 = price1*vol1;
+                        var mktcap2 = price2*vol2;
                         var diffprice = Math.abs(parseFloat(data1[i]["Close"]) - parseFloat(data2[i]["Close"]));
                         var diffvol = Math.abs(parseFloat(data1[i]["Volume"]) - parseFloat(data2[i]["Volume"]));
                         var diffcap = Math.abs(mktcap1 - mktcap2);
                         var given_ratio = parseFloat($("#ratio").val());
                         var ratio = price1/price2;
-                        $("#stock1Price").html(data1[i]["Close"]);
-                        $("#stock2Price").html(data2[i]["Close"]);
-                        $("#stock1Vol").html(data1[i]["Volume"]);
-                        $("#stock2Vol").html(data2[i]["Volume"]);
+                        console.log(price1,vol1,mktcap1, diffprice);
+                        $("#stock1Price").html(price1.toPrecision(5));
+                        $("#stock2Price").html(price2.toPrecision(5));
+                        $("#stock1Vol").html(vol1);
+                        $("#stock2Vol").html(vol2);
                         $("#stock1Cap").html(mktcap1);
                         $("#stock2Cap").html(mktcap2);
-                        $("#DiffPrice").html(diffprice);
+                        $("#DiffPrice").html(diffprice.toPrecision(5));
                         $("#DiffVol").html(diffvol);
                         $("#DiffCap").html(diffcap);
-                        $("#DiffRatio").html(ratio);
+                        $("#DiffRatio").html(ratio.toPrecision(5));
                         console.log(ratio, given_ratio);
 
                         if (ratio <= given_ratio){
                             console.log("less than historic");
                             $("#DiffRatio").addClass("green");
+                            $("#two").addClass("green");
                         }
                         else{
                             console.log("greater than historic");
                             $("#DiffRatio").removeClass("green");
+                            $("#two").removeClass("green");
                         }
                         //Generates the chart each time
                         chart.load({

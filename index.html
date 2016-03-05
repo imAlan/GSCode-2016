@@ -7,11 +7,23 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.4.10/c3.min.css"></head>
     <style>
         .green{
-            background-color: aquamarine;
+            background-color: #a5d6a7 !important;
+        }
+        .show{
+            display: block;
+        }
+        .none{
+            display: none;;
+        }
+        .main {
+            margin-top: 100px;
+        }
+        .table th, .table td{
+            border-top: none !important;
         }
     </style>
 <body>
-    <div class="container">
+    <div class="container main">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Pairs Tracker</h3>
@@ -19,11 +31,11 @@
             <div class="panel-body">
                 <form id="stockForm" class="form-inline" >
                     <div class="form-group">
-                        <label for="stock1">Enter stock</label>
+                        <label for="stock1">Enter BUY Stock</label>
                         <input type="text" id="stock1" class="form-control" >
                     </div>
                     <div class="form-group">
-                        <label for="stock2">Enter stock</label>
+                        <label for="stock2">Enter SELL Stock</label>
                         <input type="text" id="stock2" class="form-control"  />
                     </div>
                     <div class="form-group">
@@ -34,38 +46,39 @@
                 </form>
             </div>
         </div>
-        <div class="panel-body">
-            <table class="table">
-                <tr>
-                    <th>Symbol</th>
-                    <th>Price</th>
-                    <th>Volume</th>
-                    <th>MarketCap</th>
-                    <th>Ratio</th>
-                </tr>
-                <tr>
-                    <td id="stock1ticker"></td>
-                    <td id="stock1Price"></td>
-                    <td id="stock1Vol"></td>
-                    <td id="stock1Cap"></td>
-                </tr>
-                <tr>
-                    <td id="stock2ticker"></td>
-                    <td id="stock2Price"></td>
-                    <td id="stock2Vol"></td>
-                    <td id="stock2Cap"></td>
-                </tr>
-                <tr>
-                    <td id="spread"></td>
-                    <td id="DiffPrice"></td>
-                    <td id="DiffVol"></td>
-                    <td id="DiffCap"></td>
-                    <td id="DiffRatio"></td>
-                </tr>
-            </table>
-        </div>
-        <div id="chart"></div>
-        <div id="pairs">
+        <div id="one" class="panel panel-default none">
+            <div id="two" class="panel-heading">Pairs Instance</div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>Volume</th>
+                        <th>MarketCap</th>
+                        <th>Ratio</th>
+                    </tr>
+                    <tr>
+                        <td id="stock1ticker"></td>
+                        <td id="stock1Price"></td>
+                        <td id="stock1Vol"></td>
+                        <td id="stock1Cap"></td>
+                    </tr>
+                    <tr>
+                        <td id="stock2ticker"></td>
+                        <td id="stock2Price"></td>
+                        <td id="stock2Vol"></td>
+                        <td id="stock2Cap"></td>
+                    </tr>
+                    <tr>
+                        <td id="spread"></td>
+                        <td id="DiffPrice"></td>
+                        <td id="DiffVol"></td>
+                        <td id="DiffCap"></td>
+                        <td id="DiffRatio"></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="chart"></div>
         </div>
     </div>
 </body>
