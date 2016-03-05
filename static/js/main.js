@@ -39,7 +39,6 @@
     window.getStock = getStock;
 })(jQuery);
 
-var stock1, stock2;
 var datasets = [];
 
 var clean = function(dataset){
