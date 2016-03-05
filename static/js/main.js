@@ -46,6 +46,10 @@ var clean = function(dataset){
     return data;
 };
 
+var generatePair = function(){
+    document.getElementById('pairs').innerHTML = '<div id="pair1"> <div class="panel panel-default"> <div class="panel-heading">Pairs Instance</div> <div class="panel-body"> <table class="table"> <tr> <th>Symbol</th> <th>Price</th> <th>Volume</th> <th>MarketCap</th> </tr> <tr> <td id="stock1ticker"></td> <td id="stock1Price"></td> <td id="stock1Vol"></td> <td id="stock1Cap"></td> </tr> <tr> <td id="stock2ticker"></td> <td id="stock2Price"></td> <td id="stock2Vol"></td> <td id="stock2Cap"></td> </tr> <tr> <td id="spread"></td> <td id="DiffPrice"></td> <td id="DiffVol"></td> <td id="DiffCap"></td> </tr> </table> </div> <div id="chart"></div> </div> </div>';
+};
+
 $(document).ready(function(){
 
     $( "#stockForm" ).submit(function( event ) {
@@ -63,6 +67,7 @@ $(document).ready(function(){
             //callback
             if(datasets.length == 2) {
                 console.log("display data");
+                generatePair();
                 var data1 = datasets[0]["quote"];
                 var data2 = datasets[1]["quote"];
 
@@ -102,15 +107,6 @@ $(document).ready(function(){
                             columns:[vdatasets[0].slice(0,i+1),
                                 vdatasets[1].slice(0,i+1)]
                         });
-//                            var chart = c3.generate({
-//                                bindto: '#chart',
-//                                data: {
-//                                    columns: [
-//                                        vdatasets[0].slice(0,i+1),
-//                                        vdatasets[1].slice(0,i+1)
-//                                    ]
-//                                }
-//                            });
 
                         i++;
                         if (i<data1.length){
