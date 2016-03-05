@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container">
+        <form id="stockForm"  >
+            <input type="text" id="stock1" placeholder="Enter stock"  />
+            <input type="text" id="stock2" placeholder="Enter stock"  />
+            <input type="text" id="min" placeholder="Enter min spread"  />
+            <input type="text" id="max" placeholder="Enter max spread" />
+            <input type="submit" value="Post" />
+        </form>
+        <div>
+            <!--<div class="row">-->
+                <!--<span id="stock1ticker"></span> <span id="stock1Price"></span> <span id="stock1Vol"></span> <span id="stock1Cap"></span>-->
+            <!--</div>-->
+            <!--<div class="row">-->
+                <!--<span id="stock2ticker"></span> <span id="stock2Price"></span> <span id="stock2Vol"></span> <span id="stock2Cap"></span>-->
+            <!--</div>-->
+            <table class="table">
+                <tr>
+                    <td id="stock1ticker"></td>
+                    <td id="stock1Price"></td>
+                    <td id="stock1Vol"></td>
+                    <td id="stock1Cap"></td>
+                </tr>
+                <tr>
+                    <td id="stock2ticker"></td>
+                    <td id="stock2Price"></td>
+                    <td id="stock2Vol"></td>
+                    <td id="stock2Cap"></td>
+                </tr>
+                <tr>
+                    <td id="spread"></td>
+                    <td id="DiffPrice"></td>
+                    <td id="DiffVol"></td>
+                    <td id="DiffCap"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+    (function($) {
+        function getStock(opts, type, complete) {
+            var defs = {
+                desc: false,
+                baseURL: 'http://query.yahooapis.com/v1/public/yql?q=',
+                query: {
+                    quotes: 'select * from yahoo.finance.quotes where symbol = "{stock}" | sort(field="{sortBy}", descending="{desc}")',
+                    historicaldata: 'select * from yahoo.finance.historicaldata where symbol = "{stock}" and startDate = "{startDate}" and endDate = "{endDate}"'
+                },
+                suffixURL: {
+                    quotes: '&env=store://datatables.org/alltableswithkeys&format=json&callback=?',
+                    historicaldata: '&env=store://datatables.org/alltableswithkeys&format=json&callback=?'
+                }
+            };
+
+            opts = opts || {};
+
+            if (!opts.stock) {
+                complete('No stock defined');
+                return;
+            }
+
+            var query = defs.query[type]
+                    .replace('{stock}', opts.stock)
+                    .replace('{sortBy}', defs.sortBy)
+                    .replace('{desc}', defs.desc)
+                    .replace('{startDate}', opts.startDate)
+                    .replace('{endDate}', opts.endDate);
+
+            var url = defs.baseURL + query + (defs.suffixURL[type] || '');
+            $.getJSON(url, function(data) {
+                var err = null;
+                if (!data || !data.query) {
+                    err = true;
+                }
+                complete(err, !err && data.query.results);});
+        }
+        window.getStock = getStock;
+    })(jQuery);
+
+    $(document).ready(function(){
+
+        $( "#stockForm" ).submit(function( event ) {
+            var datasets = [];
+            event.preventDefault();
+            var info = {stock1:$('#stock1').val(), stock2:$('#stock2').val(), min:$("#min").val(), max:$("#max").val() };
+            console.log(info);
+            var addData = function(dataset){
+                datasets.push(dataset);
+                if(datasets.length == 2) {
+                    console.log("display data");
+                    var data1 = datasets[0]["quote"];
+                    var data2 = datasets[1]["quote"];
+
+                    $("#stock1ticker").text(data1[0]["Symbol"]);
+                    $("#stock2ticker").text(data2[0]["Symbol"]);
+                    $("#spread").text("Spread");
+                    var i=0;
+                    function myLoop(){
+                        setTimeout(function(){
+                            var mktcap1 = parseFloat(data1[i]["Close"])*parseFloat(data1[i]["Volume"]);
+                            var mktcap2 = parseFloat(data2[i]["Close"])*parseFloat(data2[i]["Volume"]);
+                            var diffprice = Math.abs(parseFloat(data1[i]["Close"]) - parseFloat(data2[i]["Close"]));
+                            var diffvol = Math.abs(parseFloat(data1[i]["Volume"]) - parseFloat(data2[i]["Volume"]));
+                            var diffcap = Math.abs(mktcap1 - mktcap2);
+                            console.log(data1[i]["Close"]);
+                            console.log(data2[i]["Close"]);
+                            $("#stock1Price").html(data1[i]["Close"]);
+                            $("#stock2Price").html(data2[i]["Close"]);
+                            $("#stock1Vol").html(data1[i]["Volume"]);
+                            $("#stock2Vol").html(data2[i]["Volume"]);
+                            $("#stock1Cap").html(mktcap1);
+                            $("#stock2Cap").html(mktcap2);
+                            $("#DiffPrice").html(diffprice);
+                            $("#DiffVol").html(diffvol);
+                            $("#DiffCap").html(diffcap);
+                            i++;
+                            if (i<data1.length){
+                                myLoop();
+                            }
+                        },1000)
+                    }
+                    myLoop();
+                }
+            };
+            getStock({ stock: info.stock1, startDate: '2013-01-01', endDate: '2013-05-05' }, 'historicaldata', function(err, data) {
+                addData(data);
+            });
+            getStock({ stock: info.stock2, startDate: '2013-01-01', endDate: '2013-05-05' }, 'historicaldata', function(err, data) {
+                addData(data);
+            });
+
+        });
+    });
+
+</script>
+</html>
