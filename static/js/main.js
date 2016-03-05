@@ -62,6 +62,11 @@ $(document).ready(function(){
 
             //callback
             if(datasets.length == 2) {
+                if ( $("#stock1").val() == datasets[1]["quote"][0]["Symbol"] || $("#stock2").val() == datasets[0]["quote"][0]["Symbol"] ){
+                    var tmp = datasets[0];
+                    datasets[1] = datasets[0];
+                    datasets[0] = tmp;
+                }
                 console.log("display data");
                 var data1 = datasets[0]["quote"];
                 var data2 = datasets[1]["quote"];
@@ -81,12 +86,15 @@ $(document).ready(function(){
                 });
                 function myLoop(){
                     setTimeout(function(){
-                        var mktcap1 = parseFloat(data1[i]["Close"])*parseFloat(data1[i]["Volume"]);
-                        var mktcap2 = parseFloat(data2[i]["Close"])*parseFloat(data2[i]["Volume"]);
+                        var price1 = parseFloat(data1[i]["Close"]);
+                        var price2 = parseFloat(data2[i]["Close"])
+                        var mktcap1 = price1*parseFloat(data1[i]["Volume"]);
+                        var mktcap2 = price2*parseFloat(data2[i]["Volume"]);
                         var diffprice = Math.abs(parseFloat(data1[i]["Close"]) - parseFloat(data2[i]["Close"]));
                         var diffvol = Math.abs(parseFloat(data1[i]["Volume"]) - parseFloat(data2[i]["Volume"]));
                         var diffcap = Math.abs(mktcap1 - mktcap2);
-
+                        var given_ratio = parseFloat($("#ratio").val());
+                        var ratio = price1/price2;
                         $("#stock1Price").html(data1[i]["Close"]);
                         $("#stock2Price").html(data2[i]["Close"]);
                         $("#stock1Vol").html(data1[i]["Volume"]);
@@ -96,21 +104,22 @@ $(document).ready(function(){
                         $("#DiffPrice").html(diffprice);
                         $("#DiffVol").html(diffvol);
                         $("#DiffCap").html(diffcap);
+                        $("#DiffRatio").html(ratio);
+                        console.log(ratio, given_ratio);
 
+                        if (ratio <= given_ratio){
+                            console.log("less than historic");
+                            $("#DiffRatio").addClass("green");
+                        }
+                        else{
+                            console.log("greater than historic");
+                            $("#DiffRatio").removeClass("green");
+                        }
                         //Generates the chart each time
                         chart.load({
                             columns:[vdatasets[0].slice(0,i+1),
                                 vdatasets[1].slice(0,i+1)]
                         });
-//                            var chart = c3.generate({
-//                                bindto: '#chart',
-//                                data: {
-//                                    columns: [
-//                                        vdatasets[0].slice(0,i+1),
-//                                        vdatasets[1].slice(0,i+1)
-//                                    ]
-//                                }
-//                            });
 
                         i++;
                         if (i<data1.length){
